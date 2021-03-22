@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -18,12 +18,12 @@ public class CardDeliveryTest {
     }
 
     @Test
-    void shouldSendFormAndChangeDateValidData() {
+    void shouldSendFormValidDataName1WithoutSpecialLetter() {
         val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
         $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName());
+        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
         $("[name='phone']").setValue(clientDataInfo.getValidPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
@@ -31,7 +31,113 @@ public class CardDeliveryTest {
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getNewDate());
         $("[class='button__text']").click();
         $(byText("Перепланировать")).click();
-        $(".notification__title").shouldHave(text("Успешно!"));
-        $(".notification__content").shouldHave(text("Встреча успешно запланирована на "+clientDataInfo.getNewDate()));
+        $(".notification__title").shouldHave(exactText("Успешно!"));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + clientDataInfo.getNewDate()));
     }
+
+    @Test
+    void shouldSendFormValidDataName2WithSpecialLetter() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidName2WithSpecialLetter());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getNewDate());
+        $("[class='button__text']").click();
+        $(byText("Перепланировать")).click();
+        $(".notification__title").shouldHave(exactText("Успешно!"));
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + clientDataInfo.getNewDate()));
+    }
+
+    @Test
+    void shouldNotSendFormInvalidName() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getInvalidName());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=name] .input__sub").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
+
+    @Test
+    void shouldNotSendFormInvalidPhone() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
+        $("[name='phone']").setValue(clientDataInfo.getInvalidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=phone] .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+    }
+
+    @Test
+    void shouldNotSendFormInvalidCity() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getInvalidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidCity());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=city] .input__sub").shouldHave(exactText("Доставка в выбранный город недоступна"));
+    }
+
+    @Test
+    void shouldNotSendFormNoName() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=name] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void shouldNotSendFormNoPhone() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=phone] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void shouldNotSendFormNoCity() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidCity());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=city] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void shouldNotSendFormNoAgreement() {
+        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
+        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
+        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[class='button__text']").click();
+        $(".input_invalid[data-test-id=agreement] .checkbox__text").shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
+    }
+
 }
