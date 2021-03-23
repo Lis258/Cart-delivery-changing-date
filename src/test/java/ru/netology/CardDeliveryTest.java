@@ -19,12 +19,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldSendFormValidDataName1WithoutSpecialLetter() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient1ValidData("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
@@ -37,12 +37,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldSendFormValidDataName2WithSpecialLetter() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient2ValidData("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName2WithSpecialLetter());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
@@ -55,12 +55,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormInvalidName() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient3InvalidName("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getInvalidName());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=name] .input__sub").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
@@ -68,12 +68,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormInvalidPhone() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient4InvalidPhone("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
-        $("[name='phone']").setValue(clientDataInfo.getInvalidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=phone] .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
@@ -81,12 +81,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormInvalidCity() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getInvalidCity());
+        val clientDataInfo = DataGenerator.generateClient5InvalidCity("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidCity());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=city] .input__sub").shouldHave(exactText("Доставка в выбранный город недоступна"));
@@ -94,11 +94,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormNoName() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient1ValidData("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=name] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
@@ -106,11 +106,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormNoPhone() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient1ValidData("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
+        $("[name='name']").setValue(clientDataInfo.getName());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=phone] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
@@ -118,11 +118,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormNoCity() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
+        val clientDataInfo = DataGenerator.generateClient1ValidData("ru");
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidCity());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[data-test-id=agreement]").click();
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=city] .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
@@ -130,12 +130,12 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNotSendFormNoAgreement() {
-        val clientDataInfo = DataGenerator.generateClientDataInfo("ru");
-        $("[data-test-id=city] input").setValue(clientDataInfo.getValidCity());
+        val clientDataInfo = DataGenerator.generateClient1ValidData("ru");
+        $("[data-test-id=city] input").setValue(clientDataInfo.getCity());
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[placeholder='Дата встречи']").setValue(clientDataInfo.getFirstDate());
-        $("[name='name']").setValue(clientDataInfo.getValidName1WithoutSpecialLetter());
-        $("[name='phone']").setValue(clientDataInfo.getValidPhone());
+        $("[name='name']").setValue(clientDataInfo.getName());
+        $("[name='phone']").setValue(clientDataInfo.getPhone());
         $("[class='button__text']").click();
         $(".input_invalid[data-test-id=agreement] .checkbox__text").shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
     }
